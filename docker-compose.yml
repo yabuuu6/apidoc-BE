@@ -1,0 +1,16 @@
+version: '3.8'
+
+services:
+  api-server:
+    build: .
+    container_name: express-api
+    ports:
+      - "8000:5000"
+    environment:
+      DB_HOST: host.docker.internal
+      DB_USER: root
+      DB_PASSWORD: ""
+      DB_NAME: docapi_db
+    volumes:
+      - .:/app
+    restart: always
