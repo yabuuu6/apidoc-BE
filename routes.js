@@ -1,5 +1,6 @@
+// routes.js (CommonJS version)
+
 const express = require('express');
-const router = express.Router();
 
 const {
   getAllEndpoints,
@@ -13,38 +14,55 @@ const {
   addDomain
 } = require('./controller/domains');
 
-const { 
+const {
   createRestApi,
   getAllRestApis,
   deleteRestApi,
   showTablesWithDescribe
 } = require('./controller/restapi');
 
-const { 
+const {
   testConnection,
   describeTable
- } = require('./controller/testconnection');
+} = require('./controller/testconnection');
 
-// ENDPOINTS
+const {
+  callByIdAndPath
+} = require('./controller/publicapi');
+
+const router = express.Router();
+
+// ==========================
+// ENDPOINTS (Management)
+// ==========================
 router.get('/get', getAllEndpoints);
 router.post('/post', addEndpoint);
 router.put('/put/:id', updateEndpoint);
 router.delete('/delete/:id', deleteEndpoint);
 
-
-// DOMAINS
+// ==========================
+// DOMAINS (Management)
+// ==========================
 router.get('/domain/get', getAllDomains);
 router.post('/domain/post', addDomain);
 
-// REST API DOC TEST
-router.get('/restapi/get',getAllRestApis);
-router.post('/restapi/post',createRestApi);
-router.delete('/restapi/delete/:id',deleteRestApi);
+// ==========================
+// REST API Config (Database connection)
+// ==========================
+router.get('/restapi/get', getAllRestApis);
+router.post('/restapi/post', createRestApi);
+router.delete('/restapi/delete/:id', deleteRestApi);
 router.get('/restapi/:uuid', showTablesWithDescribe);
 
-
-// TEST CONNECTION
+// ==========================
+// DATABASE Tools
+// ==========================
 router.post('/testconn', testConnection);
 router.post('/describe', describeTable);
+
+// ==========================
+// PUBLIC API (Catch-all)
+// ==========================
+router.get('/call/:id/:path', callByIdAndPath);
 
 module.exports = router;

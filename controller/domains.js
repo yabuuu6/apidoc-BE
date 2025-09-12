@@ -1,15 +1,15 @@
-const { query } = require('../db');
+const { query } = require('../db.js');
 
-async function getAllDomains(req, res) {
+const getAllDomains = async (req, res) => {
   try {
     const domains = await query('SELECT * FROM domains');
     res.json(domains);
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
-}
+};
 
-async function addDomain(req, res) {
+const addDomain = async (req, res) => {
   const { url } = req.body;
 
   if (!url) return res.status(400).json({ error: 'URL wajib diisi' });
@@ -24,7 +24,7 @@ async function addDomain(req, res) {
       res.status(500).json({ error: err.message });
     }
   }
-}
+};
 
 module.exports = {
   getAllDomains,

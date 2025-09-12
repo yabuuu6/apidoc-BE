@@ -1,4 +1,6 @@
-const { query } = require('../db');
+// restapi.js (CommonJS version)
+
+const { query } = require('../db.js');
 const { v4: uuidv4 } = require('uuid');
 const bcrypt = require('bcrypt');
 const mysql = require('mysql2/promise');
@@ -35,7 +37,7 @@ async function createRestApi(req, res) {
     const uuid = uuidv4();
     const dsn = `${engine.toLowerCase()}://${username}${password ? ':' + password : ''}@${ip}:${finalPort}/${database_name}`;
 
-    const result = await query(
+    await query(
       `INSERT INTO restapi 
        (uuid, projectName, engine, ip, port, username, password, database_name, dsn)
        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`,
@@ -63,7 +65,6 @@ async function createRestApi(req, res) {
   }
 }
 
-// ================= READ REST API =================
 async function getAllRestApis(req, res) {
   try {
     const rows = await query(`SELECT * FROM restapi ORDER BY id DESC`);
@@ -73,7 +74,6 @@ async function getAllRestApis(req, res) {
   }
 }
 
-// ================= DELETE REST API =================
 async function deleteRestApi(req, res) {
   const { id } = req.params;
 
@@ -89,14 +89,12 @@ async function deleteRestApi(req, res) {
     res.status(500).json({ error: 'Terjadi kesalahan pada server' });
   }
 }
-// ================= SHOW TABLES WITH DESCRIBE =================
 
 async function showTablesWithDescribe(req, res) {
   const { uuid } = req.params;
   const { tableName } = req.query;
 
   try {
-    // Cari project berdasarkan UUID
     const [project] = await query(
       `SELECT * FROM restapi WHERE uuid = ?`,
       [uuid]
@@ -110,18 +108,11 @@ async function showTablesWithDescribe(req, res) {
       return res.status(400).json({ error: 'DSN belum tersedia untuk project ini' });
     }
 
-    // Buat koneksi ke database
     const connection = await mysql.createConnection(project.dsn);
-
-    // Ambil semua tabel
     const [tablesData] = await connection.query('SHOW TABLES');
-
-    // Ekstrak nama tabel dari hasil query
     const tables = tablesData.map(row => Object.values(row)[0]);
-
     let describe = null;
 
-    // Jika ada tableName, ambil struktur tabelnya
     if (tableName) {
       const [engine] = await query(
         `SELECT describe_syntax FROM db_engines WHERE LOWER(engine_name) = LOWER(?)`,
@@ -149,7 +140,6 @@ async function showTablesWithDescribe(req, res) {
 
     await connection.end();
 
-    // Respon hasil
     return res.json({
       uuid: project.uuid,
       message: "Berhasil mengambil tabel dari database",

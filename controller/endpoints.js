@@ -1,15 +1,15 @@
-const { query } = require('../db');
+const { query } = require('../db.js');
 
-async function getAllEndpoints(req, res) {
+const getAllEndpoints = async (req, res) => {
   try {
     const endpoints = await query('SELECT * FROM endpoints');
     res.json(endpoints);
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
-}
+};
 
-async function addEndpoint(req, res) {
+const addEndpoint = async (req, res) => {
   const { baseUrl, method, path, description, status, websites, response } = req.body;
 
   if (!baseUrl || !method || !path) {
@@ -33,25 +33,23 @@ async function addEndpoint(req, res) {
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
-}
+};
 
-async function updateEndpoint(req, res) {
+const updateEndpoint = async (req, res) => {
   const { id } = req.params;
-
   const {
-  baseUrl = '',
-  method = '',
-  path = '',
-  description = '',
-  status = 'Develop',
-  websites = [],
-  response = {}
-} = req.body;
+    baseUrl = '',
+    method = '',
+    path = '',
+    description = '',
+    status = 'Develop',
+    websites = [],
+    response = {}
+  } = req.body;
 
-if (!baseUrl || !method || !path) {
-  return res.status(400).json({ error: 'baseUrl, method, dan path wajib diisi' });
-}
-
+  if (!baseUrl || !method || !path) {
+    return res.status(400).json({ error: 'baseUrl, method, dan path wajib diisi' });
+  }
 
   try {
     await query(
@@ -71,9 +69,9 @@ if (!baseUrl || !method || !path) {
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
-}
+};
 
-async function deleteEndpoint(req, res) {
+const deleteEndpoint = async (req, res) => {
   const { id } = req.params;
 
   try {
@@ -82,11 +80,12 @@ async function deleteEndpoint(req, res) {
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
-}
+};
 
+// Export semua fungsi
 module.exports = {
   getAllEndpoints,
   addEndpoint,
   updateEndpoint,
-  deleteEndpoint,
+  deleteEndpoint
 };

@@ -1,5 +1,7 @@
+
 const mysql = require("mysql2/promise");
-const { Client: PgClient } = require("pg");
+const pkg = require("pg");
+const { Client: PgClient } = pkg;
 
 const testConnection = async (req, res) => {
   const { engine, ip, port, username, password, database_name } = req.body;
@@ -46,7 +48,6 @@ const testConnection = async (req, res) => {
   }
 };
 
-
 const describeTable = async (req, res) => {
   const { engine, ip, port, username, password, database_name, table } = req.body;
 
@@ -69,8 +70,7 @@ const describeTable = async (req, res) => {
   }
 };
 
-
-module.exports = { 
-    testConnection,
-    describeTable
+module.exports = {
+  testConnection,
+  describeTable
 };

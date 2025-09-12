@@ -1,3 +1,5 @@
+// db.js (CommonJS version)
+
 const mysql = require('mysql2/promise');
 
 const dbConfig = {
@@ -7,12 +9,13 @@ const dbConfig = {
   database: process.env.DB_NAME || 'docapi_db',
 };
 
+const pool = mysql.createPool(dbConfig);
+
 async function query(sql, params) {
-  //const conn = await mysql.createConnection(dbConfig);
-  const conn = await mysql.createPool(dbConfig);
-  const [results] = await conn.execute(sql, params);
-  await conn.end();
+  const [results] = await pool.execute(sql, params);
   return results;
 }
 
-module.exports = { query };
+module.exports = {
+  query
+};
