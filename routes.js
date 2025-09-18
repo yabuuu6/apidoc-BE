@@ -18,7 +18,10 @@ const {
   createRestApi,
   getAllRestApis,
   deleteRestApi,
-  showTablesWithDescribe
+  showTablesWithDescribe,
+  generateOneEndpointFromDb,
+  // previewTables,
+  getDataFromOneTable
 } = require('./controller/restapi');
 
 const {
@@ -27,7 +30,8 @@ const {
 } = require('./controller/testconnection');
 
 const {
-  callByIdAndPath
+  callByIdAndPath,
+  callByUuidAndPath,
 } = require('./controller/publicapi');
 
 const router = express.Router();
@@ -53,6 +57,10 @@ router.get('/restapi/get', getAllRestApis);
 router.post('/restapi/post', createRestApi);
 router.delete('/restapi/delete/:id', deleteRestApi);
 router.get('/restapi/:uuid', showTablesWithDescribe);
+router.post('/restapi/generateone/:uuid', generateOneEndpointFromDb);
+// router.get('/restapi/preview/:uuid', previewTables);
+router.get('/restapi/:uuid/:tableName', getDataFromOneTable);
+
 
 // ==========================
 // DATABASE Tools
@@ -64,5 +72,6 @@ router.post('/describe', describeTable);
 // PUBLIC API (Catch-all)
 // ==========================
 router.get('/call/:id/:path', callByIdAndPath);
+router.get('/uuid/:uuid/:path', callByUuidAndPath);
 
 module.exports = router;

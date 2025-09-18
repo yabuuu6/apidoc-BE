@@ -1,4 +1,3 @@
-// server.js (CommonJS version)
 
 const express = require('express');
 const cors = require('cors');
